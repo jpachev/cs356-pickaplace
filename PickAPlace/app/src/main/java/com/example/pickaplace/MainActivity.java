@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         user1 = findViewById(R.id.user1);
         user2 = findViewById(R.id.user2);
         startButton = findViewById(R.id.start_button);
-        startRoundButton = findViewById(R.id.start_button);
+        startRoundButton = findViewById(R.id.start_round_button);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
