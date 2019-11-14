@@ -2,5 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Round 1" />
+    <TextView
+        android:id="@+id/round_username"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="username" />
+    <Button
+        android:id="@+id/start_round_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Begin" />
+
+
 
 </LinearLayout>
