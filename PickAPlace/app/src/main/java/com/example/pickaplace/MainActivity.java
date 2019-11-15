@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         TextView uName = findViewById(R.id.round_username);
         switch(roundNum){
             case 1:
-                title.setText("Welcome to round 1:");
+                title.setText("Rate each type of cuisine");
                 uName.setText(userName);
                 break;
             case 2:
