@@ -2,30 +2,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#F5F5F5">
     <TextView
         android:id="@+id/text_view_id"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:text="Pick a Place"
+        android:fontFamily="@font/atma_regular"
+        android:textSize="60sp"
+        android:paddingBottom="0dp"
+        android:layout_marginTop="120dp"
+        android:textColor="#F23D3D"/>
+    <TextView
         android:layout_width="wrap_content"
-        android:text="Welcome" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="helping couples pick a place to eat"
+        android:textSize="12dp"
+        android:textColor="#9C9C9C"/>
+
     <EditText
         android:id="@+id/user1"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:inputType="text"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/edit_text"
+        android:elevation="4dp"
+        android:paddingVertical="10dp"
+        android:paddingLeft="15dp"
         android:autofillHints="User 1"/>
+
     <EditText
         android:id="@+id/user2"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:inputType="text"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/edit_text"
+        android:elevation="4dp"
+        android:paddingVertical="10dp"
+        android:paddingLeft="15dp"
         android:autofillHints="User 2"
         />
-    <Button
-        android:id="@+id/start_button"
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Begin" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="50dp">
+        <Button
+            android:id="@+id/start_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:text="Begin"
+            android:textSize="17sp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
 
 </LinearLayout>
