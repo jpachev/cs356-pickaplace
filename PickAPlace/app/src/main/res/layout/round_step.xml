@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:text="Option 1" />
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/option_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -21,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
+            android:integer="2"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton android:id="@+id/three"
             android:layout_width="wrap_content"

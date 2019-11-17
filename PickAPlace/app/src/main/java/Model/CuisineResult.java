@@ -6,22 +6,22 @@ public class CuisineResult {
     public CuisineResult(){}
 
     public CuisineResult(ArrayList<CuisineType> one, ArrayList<CuisineType> two) {
-        UserOneList = one;
-        UserTwoList = two;
+        userOneList = one;
+        userTwoList = two;
     }
 
-    ArrayList<CuisineType> UserOneList = new ArrayList<>();
-    ArrayList<CuisineType> UserTwoList = new ArrayList<>();
+    ArrayList<CuisineType> userOneList = new ArrayList<>();
+    ArrayList<CuisineType> userTwoList = new ArrayList<>();
     private String result;
 
     public String evaluateResult() {
         ArrayList<Integer> averages = new ArrayList<>();
         int currentMax = 0;
-        for (int i = 0; i < UserOneList.size(); ++i) {
-            int currentRatingAverage = UserOneList.get(i).getRating() + UserTwoList.get(i).getRating() / 2;
+        for (int i = 0; i < userOneList.size(); ++i) {
+            int currentRatingAverage = userOneList.get(i).getRating() + userTwoList.get(i).getRating() / 2;
             if (currentRatingAverage > currentMax) {
                 currentMax = currentRatingAverage;
-                result = UserOneList.get(i).getType();
+                result = userOneList.get(i).getType();
             }
         }
         return result;
