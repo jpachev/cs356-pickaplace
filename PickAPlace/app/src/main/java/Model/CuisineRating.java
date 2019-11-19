@@ -1,9 +1,9 @@
 package Model;
 
-public class CuisineType {
-    public CuisineType(){}
+public class CuisineRating {
+    public CuisineRating(){}
 
-    public CuisineType(String t, int r) {
+    public CuisineRating(String t, int r) {
         type = t;
         rating = r;
     }

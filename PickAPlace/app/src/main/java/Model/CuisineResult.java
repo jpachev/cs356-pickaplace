@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class CuisineResult {
     public CuisineResult(){}
 
-    public CuisineResult(ArrayList<CuisineType> one, ArrayList<CuisineType> two) {
+    public CuisineResult(ArrayList<CuisineRating> one, ArrayList<CuisineRating> two) {
         userOneList = one;
         userTwoList = two;
     }
 
-    ArrayList<CuisineType> userOneList = new ArrayList<>();
-    ArrayList<CuisineType> userTwoList = new ArrayList<>();
+    ArrayList<CuisineRating> userOneList = new ArrayList<>();
+    ArrayList<CuisineRating> userTwoList = new ArrayList<>();
     private String result;
 
     public String evaluateResult() {
