@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-   /* protected void doRoundOne(final User curUser) {
+    protected void doRoundOne(final User curUser) {
         if (this.optionNum > NUM_CUISINE_OPTIONS-1){
             finishRoundOne(curUser);
             return;
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         CuisineRating userRating = new CuisineRating(cuisineTypes.get(optionNum), userChoice);
         curUser.saveRating(userRating);
     }
-    */
+
 
     protected void finishRoundOne(User curUser){
         if (curUser.equals(user1)) {
@@ -129,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
             startRound(user2);
             return;
         }
-        Toast.makeText(this, "Result is ??", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Result is ??", Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.round_result);
     }
 
 
@@ -139,13 +140,13 @@ public class MainActivity extends AppCompatActivity {
 
         switch(roundNum){
             case 1:
-               // doRoundOne(user1);
-               // nextButton = findViewById(R.id.next_button);
+                doRoundOne(user1);
+                nextButton = findViewById(R.id.next_button);
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         incrementOptionNum();
-                       // doRoundOne(curUser);
+                        doRoundOne(curUser);
                         //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
