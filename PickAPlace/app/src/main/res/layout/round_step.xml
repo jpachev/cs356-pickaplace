@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="120dp"
         android:gravity="center">
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/option_buttons"
@@ -67,7 +67,7 @@
             android:orientation="vertical"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="50dp"
             android:layout_marginBottom="50dp">
             <Button
                 android:id="@+id/next_button"
