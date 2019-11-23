@@ -18,6 +18,9 @@ public class User {
     public void saveRating(CuisineRating userRating){
         this.cuisineRatings.add(userRating);
     }
+    public ArrayList<CuisineRating> getRatings(){
+        return this.cuisineRatings;
+    }
 
     @Override
     public boolean equals(Object o) {

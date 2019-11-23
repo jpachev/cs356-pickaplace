@@ -18,4 +18,12 @@ public class CuisineRating {
     String getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "CuisineRating{" +
+                "type='" + type + '\'' +
+                ", rating=" + rating +
+                '}';
+    }
 }
