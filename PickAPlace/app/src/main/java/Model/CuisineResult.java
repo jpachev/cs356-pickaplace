@@ -15,10 +15,13 @@ public class CuisineResult {
     private String result;
 
     public String evaluateResult() {
-        ArrayList<Integer> averages = new ArrayList<>();
         int currentMax = 0;
-        for (int i = 0; i < userOneList.size(); ++i) {
-            int currentRatingAverage = userOneList.get(i).getRating() + userTwoList.get(i).getRating() / 2;
+        if (userOneList.size() != userTwoList.size()){
+            result = "Error";
+            return result;
+        }
+        for (int i = 0; i < userOneList.size()-1; i++) {
+            int currentRatingAverage = (userOneList.get(i).getRating() + userTwoList.get(i).getRating()) / 2;
             if (currentRatingAverage > currentMax) {
                 currentMax = currentRatingAverage;
                 result = userOneList.get(i).getType();
