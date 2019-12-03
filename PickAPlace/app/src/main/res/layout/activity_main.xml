@@ -3,8 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    >
     <TextView
         android:id="@+id/text_view_id"
         android:layout_width="match_parent"
