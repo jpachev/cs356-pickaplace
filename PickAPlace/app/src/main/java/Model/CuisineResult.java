@@ -22,7 +22,7 @@ public class CuisineResult {
         }
         for (int i = 0; i < userOneList.size()-1; i++) {
             int currentRatingAverage = (userOneList.get(i).getRating() + userTwoList.get(i).getRating()) / 2;
-            if (currentRatingAverage > currentMax) {
+            if (currentRatingAverage >= currentMax) {
                 currentMax = currentRatingAverage;
                 result = userOneList.get(i).getType();
             }
