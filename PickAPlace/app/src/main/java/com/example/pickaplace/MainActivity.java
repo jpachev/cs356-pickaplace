@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Console;
 import java.util.ArrayList;
 
 import Model.CuisineRating;
@@ -38,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private int roundNum;
     protected int optionNum;
     protected String currentRes;
-    protected final int NUM_CUISINE_OPTIONS = 4;
+    protected String curChoice;
+    protected String curOption;
+    protected final int NUM_CUISINE_OPTIONS = 5;
+    protected final int NUM_ROUND_TWO_OPTIONS = 2;
     protected ArrayList<String> cuisineTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundTwoTypes = new java.util.ArrayList<>();
 
@@ -81,9 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 chooseRestaurant();
             }
         });
-
-
-
     }
 
 
@@ -113,16 +115,16 @@ public class MainActivity extends AppCompatActivity {
                 roundTwoTypes.add("Traditional Chinese");
                 break;
             case("American"):
-                roundTwoTypes.add("Option 1");
-                roundTwoTypes.add("Option 2");
+                roundTwoTypes.add("American Option 1");
+                roundTwoTypes.add("American Option 2");
                 break;
             case("Indian"):
-                roundTwoTypes.add("Option 1");
-                roundTwoTypes.add("Option 2");
+                roundTwoTypes.add("Indian Option 1");
+                roundTwoTypes.add("Indian Option 2");
                 break;
             case("Japanese"):
-                roundTwoTypes.add("Option 1");
-                roundTwoTypes.add("Option 2");
+                roundTwoTypes.add("Japanese Option 1");
+                roundTwoTypes.add("Japanese Option 2");
                 break;
         }
     }
@@ -167,39 +169,58 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setContentView(R.layout.round_step);
-                radioChoiceGroup = findViewById(R.id.option_buttons);
+                optionNum = 0;
+                roundNum = 1;
+                resetRadio();
                 doRounds(user, roundNum);
                 //onRadioButtonClicked();
             }
         });
     }
 
-    protected void doRounds(final User user, final int rNum) {
+    protected void resetRadio()
+    {
+        radioChoiceGroup = findViewById(R.id.option_buttons);
+        radioChoiceGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Log.d("checkedChange","checkedid = "+checkedId);
+            }
+        });
+    }
 
+    protected void doRounds(final User user, final int rNum) {
         optionNum = 0;
-        roundNum = 1;
-        TextView title = findViewById(R.id.option_title);
+        setContentView(R.layout.round_step);
+        final TextView title = findViewById(R.id.option_title);
+        nextButton = findViewById(R.id.next_button);
+        if (!user.equals(curUser)) curUser=user;
         switch (rNum) {
             case 1:
                 title.setText(cuisineTypes.get(optionNum));
-                nextButton = findViewById(R.id.next_button);
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //setChoice(curUser, curOption);
+                        Log.d("rButton", "clicked next");
+                        onRadioButtonClicked();
                         incrementOptionNum();
                         doRoundOne(user);
-                        //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
+                        callRadioButtonClear(radioChoiceGroup);
+                        //Toast.makeText(MainActivity.this, "Moved to option "+optionNum,Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
             case 2:
-                title.setText(cuisineTypes.get(optionNum));
-                nextButton = findViewById(R.id.next_button);
+                setRoundTwoTypes(currentRes);
+                title.setText(roundTwoTypes.get(optionNum));
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        onRadioButtonClicked();
                         incrementOptionNum();
-                        doRoundTwo(user, currentRes);
+                        doRoundTwo(user);
+                        callRadioButtonClear(radioChoiceGroup);
                         //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -218,13 +239,13 @@ public class MainActivity extends AppCompatActivity {
 
     protected void doRoundOne(final User user) {
         curUser = user;
+        setChoice(curUser, curOption);
         if (this.optionNum > NUM_CUISINE_OPTIONS - 1) {
             finishRoundOne(user);
             return;
         }
 
         final TextView title = findViewById(R.id.option_title);
-        radioChoiceGroup.clearCheck();
         title.setText(cuisineTypes.get(optionNum));
     }
 
@@ -237,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
             startRound(user2);
             return;
         }
+
 
         if (user2.getRatings().size() <= 0){
             Toast.makeText(this, "No ratings for user2", Toast.LENGTH_SHORT).show();
@@ -254,19 +276,22 @@ public class MainActivity extends AppCompatActivity {
             Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());
 
         showResult(user1.getRatings(), user2.getRatings());
+
+
     }
 
-    protected void doRoundTwo(final User user, String res){
+    protected void doRoundTwo(final User user){
         curUser = user;
-        setRoundTwoTypes(res);
-        if (this.optionNum > NUM_CUISINE_OPTIONS - 1) {
+        Log.d("uname",user.getName());
+        Log.d("curOpt",curOption);
+        setChoice(curUser, curOption);
+        if (this.optionNum > NUM_ROUND_TWO_OPTIONS - 1) {
             finishRoundTwo(user);
             return;
         }
 
         final TextView title = findViewById(R.id.option_title);
-        radioChoiceGroup.clearCheck();
-        title.setText(cuisineTypes.get(optionNum));
+        title.setText(roundTwoTypes.get(optionNum));
     }
 
     protected void finishRoundTwo(User user){
@@ -304,7 +329,17 @@ public class MainActivity extends AppCompatActivity {
         TextView resTitle = findViewById(R.id.result);
         resTitle.setText(stringRes);
         currentRes = stringRes;
-        incrementRoundNum();
+
+        Button nextRoundButton = findViewById(R.id.next_round_button);
+        nextRoundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                incrementRoundNum();
+                setUpRound(2, user1.getName());
+                doRounds(user1, 2);
+                //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     protected void incrementRoundNum() {
@@ -316,21 +351,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void setChoice(User user, String strRating, String option){
-        int r = Integer.parseInt(strRating);
+    protected void setChoice(User user, String option){
+        int r = user.getRating(option);
         CuisineRating choice = new CuisineRating(option, r);
         user.saveRating(choice);
+        callRadioButtonClear(radioChoiceGroup);
+        Log.d("rButton", "Cleared buttons");
     }
 
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-        String str = "";
-        TextView option = findViewById(R.id.option_title);
-        String curOption = option.getText().toString();
+    protected void setCurChoice(User user, String strRating, String option){
+        int r = Integer.parseInt(strRating);
+        Log.d("user cur",user.getName());
+        user.saveTempRating(option, r);
+        Log.d("rButton", "Saving cur choice "+strRating+ "for "+option);
+    }
 
+    public String getCurOption() {
+        switch (roundNum){
+            case 1:
+                return cuisineTypes.get(optionNum);
+            case 2:
+                return roundTwoTypes.get(optionNum);
+        }
+
+        return "";
+    }
+
+    public void onRadioButtonClicked() {
+        // Is the button now checked?
+        String str = "";
+        curOption = getCurOption();
+        resetRadio();
+        int checkedId = radioChoiceGroup.getCheckedRadioButtonId();
+        Log.d("rButton", "checkedId: "+checkedId);
         // Check which radio button was clicked
-       switch(view.getId()) {
+       switch(checkedId) {
             case R.id.one:
                 str = "1";
                 break;
@@ -348,8 +403,20 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        setChoice(curUser, str, curOption);
+        curChoice = str;
+        setCurChoice(curUser,str, curOption);
+    }
 
+    // Method to clear radio group
+    public void callRadioButtonClear(final RadioGroup radiobuttongroup)
+    {
+        new CountDownTimer(5,1){
+            public void onTick(long blah){  return;}
+            public void onFinish() {
+                Log.d("rButton", "timer called");
+                radiobuttongroup.clearCheck();           // ClearCheck making all buttons in the radio group to uncheck
+            }
+        }.start();
     }
 
 }

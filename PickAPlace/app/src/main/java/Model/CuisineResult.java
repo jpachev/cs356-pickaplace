@@ -20,10 +20,10 @@ public class CuisineResult {
             result = "Error";
             return result;
         }
-        for (int i = 0; i < userOneList.size()-1; i++) {
-            int currentRatingAverage = (userOneList.get(i).getRating() + userTwoList.get(i).getRating()) / 2;
-            if (currentRatingAverage >= currentMax) {
-                currentMax = currentRatingAverage;
+        for (int i = 0; i < userOneList.size(); i++) {
+            int currentRatingSum = (userOneList.get(i).getRating() + userTwoList.get(i).getRating());
+            if (currentRatingSum >= currentMax) {
+                currentMax = currentRatingSum;
                 result = userOneList.get(i).getType();
             }
         }

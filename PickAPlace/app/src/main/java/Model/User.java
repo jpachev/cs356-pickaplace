@@ -1,6 +1,8 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class User {
@@ -10,7 +12,8 @@ public class User {
 
     private String name;
     private ArrayList<CuisineRating> cuisineRatings = new ArrayList<>();
-
+    private Map<String, Integer> tempCuisineRatings = new HashMap<>();
+    private ArrayList<CuisineRating> roundTwoRatings = new ArrayList<>();
     public String getName() {
         return this.name;
     }
@@ -19,8 +22,20 @@ public class User {
         this.cuisineRatings.add(userRating);
     }
 
+    public void saveTempRating(String option, int r){
+        this.tempCuisineRatings.put(option, r);
+    }
+
+    public int getRating(String option){
+        return this.tempCuisineRatings.get(option);
+    }
+
     public ArrayList<CuisineRating> getRatings(){
         return this.cuisineRatings;
+    }
+
+    public void clearRatings(){
+        this.cuisineRatings.clear();
     }
 
     @Override
