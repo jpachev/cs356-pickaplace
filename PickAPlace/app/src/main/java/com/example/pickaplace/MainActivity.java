@@ -137,18 +137,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void setUpRound(int roundNum, String userName) {
+    protected void setUpRound(int rNum, String userName) {
         setContentView(R.layout.round_title);
         TextView title = findViewById(R.id.title);
         TextView uName = findViewById(R.id.round_username);
 
-        switch (roundNum) {
+        switch (rNum) {
             case 1:
                 title.setText("Rate each type of cuisine");
                 uName.setText(userName);
                 break;
             case 2:
                 title.setText("Welcome to round 2");
+                Log.d("round2", "set up round2 title");
                 uName.setText(userName);
                 break;
             case 3:
@@ -159,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Result is ??", Toast.LENGTH_SHORT).show();
                 return;
         }
+
+        Log.d("round2", "rNum: "+rNum);
 
     }
 
@@ -184,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         radioChoiceGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Log.d("checkedChange","checkedid = "+checkedId);
+               // Log.d("checkedChange","checkedid = "+checkedId);
             }
         });
     }
@@ -214,11 +217,14 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 setRoundTwoTypes(currentRes);
                 title.setText(roundTwoTypes.get(optionNum));
+                Log.d("round2", "title "+roundTwoTypes.get(optionNum));
+                nextButton.setOnClickListener(null);
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onRadioButtonClicked();
                         incrementOptionNum();
+                        Log.d("round2", "clicked nextButton 2");
                         doRoundTwo(user);
                         callRadioButtonClear(radioChoiceGroup);
                         //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
@@ -266,14 +272,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Log.d("arraysize", "size of user1 "+user1.getRatings().size());
-        Log.d("arraysize", "size of user2 "+user2.getRatings().size());
+        //Log.d("arraysize", "size of user1 "+user1.getRatings().size());
+        //Log.d("arraysize", "size of user2 "+user2.getRatings().size());
 
         for (int i = 0; i < user1.getRatings().size(); i++)
-            Log.d("ratings","user 1 rating: "+user1.getRatings().get(i).toString());
+            //Log.d("ratings","user 1 rating: "+user1.getRatings().get(i).toString());
 
-        for (int i = 0; i < user2.getRatings().size(); i++)
-            Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());
+        for (int j = 0; j < user2.getRatings().size(); j++)
+            //Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());
+
 
         showResult(user1.getRatings(), user2.getRatings());
 
@@ -282,8 +289,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected void doRoundTwo(final User user){
         curUser = user;
-        Log.d("uname",user.getName());
-        Log.d("curOpt",curOption);
+       // Log.d("uname",user.getName());
+        //Log.d("curOpt",curOption);
         setChoice(curUser, curOption);
         if (this.optionNum > NUM_ROUND_TWO_OPTIONS - 1) {
             finishRoundTwo(user);
@@ -309,14 +316,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Log.d("arraysize", "size of user1 "+user1.getRatings().size());
+       /* Log.d("arraysize", "size of user1 "+user1.getRatings().size());
         Log.d("arraysize", "size of user2 "+user2.getRatings().size());
 
         for (int i = 0; i < user1.getRatings().size(); i++)
             Log.d("ratings","user 1 rating: "+user1.getRatings().get(i).toString());
 
         for (int i = 0; i < user2.getRatings().size(); i++)
-            Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());
+            Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());*/
 
         showResult(user1.getRatings(), user2.getRatings());
     }
@@ -356,14 +363,14 @@ public class MainActivity extends AppCompatActivity {
         CuisineRating choice = new CuisineRating(option, r);
         user.saveRating(choice);
         callRadioButtonClear(radioChoiceGroup);
-        Log.d("rButton", "Cleared buttons");
+        //Log.d("rButton", "Cleared buttons");
     }
 
     protected void setCurChoice(User user, String strRating, String option){
         int r = Integer.parseInt(strRating);
-        Log.d("user cur",user.getName());
+       // Log.d("user cur",user.getName());
         user.saveTempRating(option, r);
-        Log.d("rButton", "Saving cur choice "+strRating+ "for "+option);
+        //Log.d("rButton", "Saving cur choice "+strRating+ "for "+option);
     }
 
     public String getCurOption() {
@@ -383,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
         curOption = getCurOption();
         resetRadio();
         int checkedId = radioChoiceGroup.getCheckedRadioButtonId();
-        Log.d("rButton", "checkedId: "+checkedId);
+       // Log.d("rButton", "checkedId: "+checkedId);
         // Check which radio button was clicked
        switch(checkedId) {
             case R.id.one:
@@ -413,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
         new CountDownTimer(5,1){
             public void onTick(long blah){  return;}
             public void onFinish() {
-                Log.d("rButton", "timer called");
+                //Log.d("rButton", "timer called");
                 radiobuttongroup.clearCheck();           // ClearCheck making all buttons in the radio group to uncheck
             }
         }.start();
