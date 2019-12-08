@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     protected String curOption;
     protected final int NUM_CUISINE_OPTIONS = 5;
     protected final int NUM_ROUND_TWO_OPTIONS = 2;
+    protected final int NUM_ROUND_THREE_OPTIONS = 2;
     protected ArrayList<String> cuisineTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundTwoTypes = new java.util.ArrayList<>();
+    protected ArrayList<String> roundThreeTypes = new java.util.ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +132,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    protected void setRoundThreeTypes(String r2Res){
+        switch(r2Res){
+            case("American Mexican"):
+                roundThreeTypes.add("American Mexican");
+                break;
+            case("Traditional Mexican"):
+                roundThreeTypes.add("American Mexican");
+                break;
+        }
+    }
+
+
     protected void chooseRestaurant() {
 
+        roundNum = 1;
         setUpRound(1, user1.getName());
         startRound(user1);
     }
@@ -173,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 setContentView(R.layout.round_step);
                 optionNum = 0;
-                roundNum = 1;
+                //roundNum = 1;
+                //incrementRoundNum();
                 resetRadio();
                 doRounds(user, roundNum);
                 //onRadioButtonClicked();
@@ -194,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void doRounds(final User user, final int rNum) {
         optionNum = 0;
+        Log.d("round3", "Round num = "+roundNum);
         setContentView(R.layout.round_step);
         final TextView title = findViewById(R.id.option_title);
         nextButton = findViewById(R.id.next_button);
@@ -232,7 +249,21 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
             case 3:
-
+                setRoundThreeTypes(currentRes);
+                title.setText(roundThreeTypes.get(optionNum));
+                Log.d("round3", "title "+roundThreeTypes.get(optionNum));
+                nextButton.setOnClickListener(null);
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onRadioButtonClicked();
+                        incrementOptionNum();
+                        Log.d("round3", "clicked nextButton 3");
+                        doRoundThree(user);
+                        callRadioButtonClear(radioChoiceGroup);
+                        //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
+                    }
+                });
                 //uName.setText(userName);
                 break;
             default:
@@ -275,11 +306,11 @@ public class MainActivity extends AppCompatActivity {
         //Log.d("arraysize", "size of user1 "+user1.getRatings().size());
         //Log.d("arraysize", "size of user2 "+user2.getRatings().size());
 
-        for (int i = 0; i < user1.getRatings().size(); i++)
+       /* for (int i = 0; i < user1.getRatings().size(); i++)
             //Log.d("ratings","user 1 rating: "+user1.getRatings().get(i).toString());
 
         for (int j = 0; j < user2.getRatings().size(); j++)
-            //Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());
+            //Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());*/
 
 
         showResult(user1.getRatings(), user2.getRatings());
@@ -315,6 +346,37 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        showResult(user1.getRatings(), user2.getRatings());
+    }
+
+    protected void doRoundThree(final User user){
+        curUser = user;
+        // Log.d("uname",user.getName());
+        //Log.d("curOpt",curOption);
+        setChoice(curUser, curOption);
+        if (this.optionNum > NUM_ROUND_THREE_OPTIONS - 1) {
+            finishRoundThree(user);
+            return;
+        }
+
+        final TextView title = findViewById(R.id.option_title);
+        title.setText(roundTwoTypes.get(optionNum));
+    }
+
+    protected void finishRoundThree(User user){
+        curUser = user;
+        if (user.equals(user1)) {
+            setUpRound(2, user2.getName());
+            curUser = user2;
+            startRound(user2);
+            return;
+        }
+
+        if (user2.getRatings().size() <= 0){
+            Toast.makeText(this, "No ratings for user2", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
        /* Log.d("arraysize", "size of user1 "+user1.getRatings().size());
         Log.d("arraysize", "size of user2 "+user2.getRatings().size());
@@ -327,6 +389,9 @@ public class MainActivity extends AppCompatActivity {
 
         showResult(user1.getRatings(), user2.getRatings());
     }
+
+
+
 
     protected void showResult(ArrayList<CuisineRating> one, ArrayList<CuisineRating> two){
         CuisineResult result = new CuisineResult(one, two);
@@ -341,9 +406,10 @@ public class MainActivity extends AppCompatActivity {
         nextRoundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("round3", "round num: "+roundNum);
                 incrementRoundNum();
-                setUpRound(2, user1.getName());
-                doRounds(user1, 2);
+                setUpRound(roundNum, user1.getName());
+                startRound(user1);
                 //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
             }
         });
