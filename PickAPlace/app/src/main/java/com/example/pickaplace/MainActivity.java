@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected String currentRes;
     protected String curChoice;
     protected String curOption;
-    protected final int NUM_CUISINE_OPTIONS = 5;
+    protected final int NUM_CUISINE_OPTIONS = 4;
     protected final int NUM_ROUND_TWO_OPTIONS = 2;
     protected final int NUM_ROUND_THREE_OPTIONS = 2;
     protected ArrayList<String> cuisineTypes = new java.util.ArrayList<>();
@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         cuisineTypes.add("Chinese");
         cuisineTypes.add("American");
         cuisineTypes.add("Indian");
-        cuisineTypes.add("Japanese");
     }
 
     protected void setRoundTwoTypes(String r1Res){
@@ -124,21 +123,18 @@ public class MainActivity extends AppCompatActivity {
                 roundTwoTypes.add("Indian Option 1");
                 roundTwoTypes.add("Indian Option 2");
                 break;
-            case("Japanese"):
-                roundTwoTypes.add("Japanese Option 1");
-                roundTwoTypes.add("Japanese Option 2");
-                break;
         }
     }
 
 
     protected void setRoundThreeTypes(String r2Res){
+        Log.d("round3", "r2res = "+r2Res);
         switch(r2Res){
             case("American Mexican"):
                 roundThreeTypes.add("American Mexican");
                 break;
             case("Traditional Mexican"):
-                roundThreeTypes.add("American Mexican");
+                roundThreeTypes.add("Traditional Mexican");
                 break;
         }
     }
@@ -163,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 uName.setText(userName);
                 break;
             case 2:
-                title.setText("Rate to narrow down Cuisine type");
+                title.setText("Rate to narrow down cuisine type");
                 Log.d("round2", "set up round2 title");
                 uName.setText(userName);
                 break;
