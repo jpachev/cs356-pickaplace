@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.Console;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import Model.CuisineRating;
@@ -45,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     protected final int NUM_CUISINE_OPTIONS = 4;
     protected final int NUM_ROUND_TWO_OPTIONS = 2;
     protected final int NUM_ROUND_THREE_OPTIONS = 2;
+    protected final String API_HOST = "https://api.yelp.com";
+    protected final String SEARCH_PATH = "/v3/businesses/search";
+    protected final String BUSINESS_PATH = "/v3/businesses/";  // Business ID will come after slash.
+    private final String API_KEY = "17XERKHngT8aqZA2fQRbVJ7peWIrsOTbbfwgLpDyA16I7SrUBVccD7neWqWpKOlH4VgdeuYwX32mCwJdQBoRmakAAMi03hnQhoPBQ6a0dUAxJ7bQpsdSiSmh5tHhXXYx";
     protected ArrayList<String> cuisineTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundTwoTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundThreeTypes = new java.util.ArrayList<>();
@@ -245,18 +260,20 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
             case 3:
-                setRoundThreeTypes(currentRes);
-                title.setText(roundThreeTypes.get(optionNum));
-                Log.d("round3", "title "+roundThreeTypes.get(optionNum));
+                //setRoundThreeTypes(currentRes);
+               // title.setText(roundThreeTypes.get(optionNum));
+               // Log.d("round3", "title "+roundThreeTypes.get(optionNum));
                 nextButton.setOnClickListener(null);
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onRadioButtonClicked();
-                        incrementOptionNum();
+                       // onRadioButtonClicked();
+                        //incrementOptionNum();
                         Log.d("round3", "clicked nextButton 3");
-                        doRoundThree(user);
-                        callRadioButtonClear(radioChoiceGroup);
+                        HttpResponse response = sendRequest();
+                        Log.d("round3", "Recieved response"+response.toString());
+                      //  doRoundThree(user);
+                       // callRadioButtonClear(radioChoiceGroup);
                         //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -489,6 +506,104 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /* get_business(api_key, business_id):
+            """Query the Business API by a business ID.
+    Args:
+    business_id (str): The ID of the business to query.
+            Returns:
+    dict: The JSON response from the request.
+            """
+    business_path = BUSINESS_PATH + business_id
 
+    return request(API_HOST, business_path, api_key)*/
+
+    protected HttpRequest getBusiness(String bId){
+        String businessPath = BUSINESS_PATH + bId;
+        HttpGet request = new HttpGet();
+
+        return null;
+    }
+
+
+    /*def search(api_key, term, location):
+    """Query the Search API by a search term and location.
+    Args:
+        term (str): The search term passed to the API.
+        location (str): The search location passed to the API.
+    Returns:
+        dict: The JSON response from the request.
+    """
+
+    url_params = {
+        'term': term.replace(' ', '+'),
+        'location': location.replace(' ', '+'),
+        'limit': SEARCH_LIMIT
+    }
+    return request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)*/
+
+    protected HttpResponse search(String term, String location){
+        return null;
+    }
+
+    /*def query_api(term, location):
+            """Queries the API by the input values from the user.
+    Args:
+    term (str): The search term to query.
+            location (str): The location of the business to query.
+    """
+    response = search(API_KEY, term, location)
+
+    businesses = response.get('businesses')
+
+            if not businesses:
+    print(u'No businesses for {0} in {1} found.'.format(term, location))
+            return
+
+    business_id = businesses[0]['id']
+
+    print(u'{0} businesses found, querying business info ' \
+            'for the top result "{1}" ...'.format(
+            len(businesses), business_id))
+    response = get_business(API_KEY, business_id)
+
+    print(u'Result for business "{0}" found:'.format(business_id))
+            pprint.pprint(response, indent=2)*/
+
+    protected void queryApi(String term, String location){
+
+    }
+
+
+    protected String buildURL(String result){
+        String req = API_HOST+SEARCH_PATH+"?term=mexican&location=Provo&limit=10";
+        return req;
+    }
+
+    public HttpResponse sendRequest(){
+        HttpResponse response = null;
+        try {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            //Obviously gonna update this
+            request.setHeader("Authorization", "Bearer " + API_KEY);
+            String url = buildURL("");
+            request.setURI(new URI(url));
+            response = client.execute(request);
+            Log.d("round3", response.toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return response;
+    }
 }
+
+
+
+
 
