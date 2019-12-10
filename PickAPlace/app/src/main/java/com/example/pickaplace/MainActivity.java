@@ -163,12 +163,12 @@ public class MainActivity extends AppCompatActivity {
                 uName.setText(userName);
                 break;
             case 2:
-                title.setText("Welcome to round 2");
+                title.setText("Rate to narrow down Cuisine type");
                 Log.d("round2", "set up round2 title");
                 uName.setText(userName);
                 break;
             case 3:
-                title.setText("Welcome to round 3");
+                title.setText("Rate each restaurant");
                 uName.setText(userName);
                 break;
             default:
