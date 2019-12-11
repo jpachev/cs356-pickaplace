@@ -213,11 +213,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 setContentView(R.layout.round_step);
                 optionNum = 0;
-                //roundNum = 1;
-                //incrementRoundNum();
                 resetRadio();
                 doRounds(user, roundNum);
-                //onRadioButtonClicked();
             }
         });
     }
@@ -256,47 +253,38 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 break;
-           /* case 2:
-                setRoundTwoTypes(currentRes);
-                title.setText(roundTwoTypes.get(optionNum));
-                Log.d("round2", "title "+roundTwoTypes.get(optionNum));
+            case 2:
+                title.setText(restaurants[optionNum].getName());
                 nextButton.setOnClickListener(null);
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onRadioButtonClicked();
                         incrementOptionNum();
-                        Log.d("round2", "clicked nextButton 2");
                         doRoundTwo(user);
                         callRadioButtonClear(radioChoiceGroup);
-                        //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
-                break;*/
-            case 2:
-                //setRoundThreeTypes(currentRes);
-               // title.setText(roundThreeTypes.get(optionNum));
-               // Log.d("round3", "title "+roundThreeTypes.get(optionNum));
-                nextButton.setOnClickListener(null);
-                nextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       // onRadioButtonClicked();
-                        //incrementOptionNum();
-                        Log.d("round3", "clicked nextButton 3");
-                        new RetrieveBusinessTask().execute();
-                      //  doRoundThree(user);
-                       // callRadioButtonClear(radioChoiceGroup);
-                        //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
-                    }
-                });
-                //uName.setText(userName);
                 break;
             default:
                 Toast.makeText(this, "Result is ??", Toast.LENGTH_SHORT).show();
                 return;
         }
 
+    }
+
+
+
+    protected void callAPI(){
+        RetrieveBusinessTask businessTask = new RetrieveBusinessTask();
+        businessTask.mainActivity = MainActivity.this;
+        businessTask.execute();
+        // restaurants = businessTask.getResults();
+
+        if (restaurants != null){
+            Log.d("datashare", "Number of restaurants "+restaurants.length);
+        }
+        Log.d("round3", "No restaurants");
     }
 
 
@@ -344,7 +332,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void doRoundTwo(final User user){
+
+
+  /*  protected void doRoundTwo(final User user){
         curUser = user;
        // Log.d("uname",user.getName());
         //Log.d("curOpt",curOption);
@@ -373,23 +363,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         showResult(user1.getRatings(), user2.getRatings());
-    }
+    }*/
 
-    protected void doRoundThree(final User user){
+    protected void doRoundTwo(final User user){
         curUser = user;
         // Log.d("uname",user.getName());
         //Log.d("curOpt",curOption);
         setChoice(curUser, curOption);
-        if (this.optionNum > NUM_ROUND_THREE_OPTIONS - 1) {
-            finishRoundThree(user);
+        if (this.optionNum > restaurants.length-1) {
+            finishRoundTwo(user);
             return;
         }
 
         final TextView title = findViewById(R.id.option_title);
-        title.setText(roundTwoTypes.get(optionNum));
+        title.setText(restaurants[optionNum].getName());
     }
 
-    protected void finishRoundThree(User user){
+    protected void finishRoundTwo(User user){
         curUser = user;
         if (user.equals(user1)) {
             setUpRound(2, user2.getName());
@@ -428,14 +418,13 @@ public class MainActivity extends AppCompatActivity {
         resTitle.setText(stringRes);
         currentRes = stringRes;
 
-        Button nextRoundButton = findViewById(R.id.next_round_button);
+        final Button nextRoundButton = findViewById(R.id.next_round_button);
         nextRoundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("round3", "round num: "+roundNum);
-                incrementRoundNum();
-                setUpRound(roundNum, user1.getName());
-                startRound(user1);
+                nextRoundButton.setEnabled(false);
+                callAPI();
                 //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
             }
         });
@@ -462,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
         int r = Integer.parseInt(strRating);
        // Log.d("user cur",user.getName());
         user.saveTempRating(option, r);
-        //Log.d("rButton", "Saving cur choice "+strRating+ "for "+option);
+        Log.d("rButton", "Saving cur choice "+strRating+ "for "+option);
     }
 
     public String getCurOption() {
@@ -470,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 return cuisineTypes.get(optionNum);
             case 2:
-                return roundTwoTypes.get(optionNum);
+                return restaurants[optionNum].getName();
         }
 
         return "";
@@ -519,77 +508,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /* get_business(api_key, business_id):
-            """Query the Business API by a business ID.
-    Args:
-    business_id (str): The ID of the business to query.
-            Returns:
-    dict: The JSON response from the request.
-            """
-    business_path = BUSINESS_PATH + business_id
-
-    return request(API_HOST, business_path, api_key)*/
-
-    protected HttpRequest getBusiness(String bId){
-        String businessPath = BUSINESS_PATH + bId;
-        HttpGet request = new HttpGet();
-
-        return null;
-    }
-
-
-    /*def search(api_key, term, location):
-    """Query the Search API by a search term and location.
-    Args:
-        term (str): The search term passed to the API.
-        location (str): The search location passed to the API.
-    Returns:
-        dict: The JSON response from the request.
-    """
-
-    url_params = {
-        'term': term.replace(' ', '+'),
-        'location': location.replace(' ', '+'),
-        'limit': SEARCH_LIMIT
-    }
-    return request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)*/
-
-    protected HttpResponse search(String term, String location){
-        return null;
-    }
-
-    /*def query_api(term, location):
-            """Queries the API by the input values from the user.
-    Args:
-    term (str): The search term to query.
-            location (str): The location of the business to query.
-    """
-    response = search(API_KEY, term, location)
-
-    businesses = response.get('businesses')
-
-            if not businesses:
-    print(u'No businesses for {0} in {1} found.'.format(term, location))
-            return
-
-    business_id = businesses[0]['id']
-
-    print(u'{0} businesses found, querying business info ' \
-            'for the top result "{1}" ...'.format(
-            len(businesses), business_id))
-    response = get_business(API_KEY, business_id)
-
-    print(u'Result for business "{0}" found:'.format(business_id))
-            pprint.pprint(response, indent=2)*/
-
-    protected void queryApi(String term, String location){
-
-    }
-
-
     protected String buildURL(String result){
-        String req = API_HOST+SEARCH_PATH+"?term=mexican&location=Provo&limit=10";
+        String req = API_HOST+SEARCH_PATH+"?term="+result+"&location=Provo&limit=5";
         return req;
+    }
+
+    protected void handleAPIResults(){
+        Button nextRoundButton = findViewById(R.id.next_round_button);
+        nextRoundButton.setEnabled(true);
+        incrementRoundNum();
+        setUpRound(roundNum, user1.getName());
+        startRound(user1);
     }
 
     public HttpResponse sendRequest(){
@@ -616,18 +545,22 @@ public class MainActivity extends AppCompatActivity {
         return response;
     }
 
-
-    class RetrieveBusinessTask extends AsyncTask<String, Void, HttpResponse> {
+    class RetrieveBusinessTask extends AsyncTask<String, Void, Business[]> {
 
         private Exception exception;
-        protected HttpResponse doInBackground(String... urls) {
+
+
+        public MainActivity mainActivity = null;
+
+        protected Business[] doInBackground(String... urls) {
+            Business[] results = null;
             HttpResponse response = null;
             try {
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
                 //Obviously gonna update this
                 request.setHeader("Authorization", "Bearer " + API_KEY);
-                String url = buildURL("");
+                String url = buildURL(mainActivity.currentRes);
                 Log.d("round3", "url :"+url);
                 request.setURI(new URI(url));
                 response = client.execute(request);
@@ -646,6 +579,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("round3", curB.getName());
                 }
 
+                results = res.getBusinesses();
+
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             } catch (ClientProtocolException e) {
@@ -656,7 +591,15 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             Log.d("round3", "Recieved response"+response.toString());
-            return response;
+
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(Business[] results) {
+            super.onPostExecute(results);
+            this.mainActivity.restaurants = results;
+            handleAPIResults();
         }
 
     }
