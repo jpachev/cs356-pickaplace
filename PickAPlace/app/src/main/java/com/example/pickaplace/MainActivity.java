@@ -23,25 +23,25 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.HttpEntity;
+/*import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.util.EntityUtils;*/
 import org.json.JSONObject;
 
-import java.io.Console;
-import java.io.DataInputStream;
-import java.io.FileReader;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import Model.Business;
@@ -521,29 +521,6 @@ public class MainActivity extends AppCompatActivity {
         startRound(user1);
     }
 
-    public HttpResponse sendRequest(){
-        HttpResponse response = null;
-        try {
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet();
-            //Obviously gonna update this
-            request.setHeader("Authorization", "Bearer " + API_KEY);
-            String url = buildURL("");
-            Log.d("round3", "Url = "+url);
-            request.setURI(new URI(url));
-            response = client.execute(request);
-            Log.d("round3", response.toString());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return response;
-    }
 
     class RetrieveBusinessTask extends AsyncTask<String, Void, Business[]> {
 
@@ -554,8 +531,9 @@ public class MainActivity extends AppCompatActivity {
 
         protected Business[] doInBackground(String... urls) {
             Business[] results = null;
-            HttpResponse response = null;
+            //HttpResponse response = null;
             try {
+                /*
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
                 //Obviously gonna update this
@@ -566,11 +544,29 @@ public class MainActivity extends AppCompatActivity {
                 response = client.execute(request);
 
                 HttpEntity responseEntity = response.getEntity();
-                String responseBody = EntityUtils.toString(responseEntity);
+                String responseBody = EntityUtils.toString(responseEntity);*/
+                String urlString = buildURL(mainActivity.currentRes);
+                URL url = new URL(urlString);
+
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("Authorization", "Bearer "+API_KEY);
+                int responseCode = con.getResponseCode();
+                Log.d("conn","GET Response Code :: " + responseCode);
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        con.getInputStream()));
+                String inputLine;
+                StringBuffer responseBody = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    responseBody.append(inputLine);
+                }
+                in.close();
 
                 Log.d("round3", "Response body: "+responseBody);
                 Gson gson = new Gson();
-                BusinessResponse res = gson.fromJson(responseBody, BusinessResponse.class);
+                BusinessResponse res = gson.fromJson(responseBody.toString(), BusinessResponse.class);
 
                 int curNumB =  res.businesses.length;
                 Log.d("round3", "# of businesses "+curNumB);
@@ -581,16 +577,12 @@ public class MainActivity extends AppCompatActivity {
 
                 results = res.getBusinesses();
 
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
+            }
+            catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            Log.d("round3", "Recieved response"+response.toString());
+           // Log.d("round3", "Recieved response"+response.toString());
 
             return results;
         }
