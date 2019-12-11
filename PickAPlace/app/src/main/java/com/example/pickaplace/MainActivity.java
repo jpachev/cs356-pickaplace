@@ -394,14 +394,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-       /* Log.d("arraysize", "size of user1 "+user1.getRatings().size());
+        Log.d("arraysize", "size of user1 "+user1.getRatings().size());
         Log.d("arraysize", "size of user2 "+user2.getRatings().size());
 
         for (int i = 0; i < user1.getRatings().size(); i++)
             Log.d("ratings","user 1 rating: "+user1.getRatings().get(i).toString());
 
         for (int i = 0; i < user2.getRatings().size(); i++)
-            Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());*/
+            Log.d("ratings", "user2 rating: "+user2.getRatings().get(i).toString());
 
         showResult(user1.getRatings(), user2.getRatings());
     }
@@ -410,24 +410,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected void showResult(ArrayList<CuisineRating> one, ArrayList<CuisineRating> two){
-        CuisineResult result = new CuisineResult(one, two);
+        CuisineResult result = new CuisineResult(user1.getRatings(), user2.getRatings());
         String stringRes = result.evaluateResult();
         //Toast.makeText(this, "Result is ??", Toast.LENGTH_SHORT).show();
-        setContentView(R.layout.round_result);
-        TextView resTitle = findViewById(R.id.result);
-        resTitle.setText(stringRes);
-        currentRes = stringRes;
 
-        final Button nextRoundButton = findViewById(R.id.next_round_button);
-        nextRoundButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("round3", "round num: "+roundNum);
-                nextRoundButton.setEnabled(false);
-                callAPI();
-                //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
-            }
-        });
+        currentRes = stringRes;
+        Log.d("finalRes","Current res = "+currentRes);
+        if (roundNum == 1) {
+            setContentView(R.layout.round_result);
+            TextView resTitle = findViewById(R.id.result);
+            resTitle.setText(stringRes);
+            final Button nextRoundButton = findViewById(R.id.next_round_button);
+            nextRoundButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("round3", "round num: " + roundNum);
+                    nextRoundButton.setEnabled(false);
+                    callAPI();
+                }
+            });
+        }
+        else {
+            setContentView(R.layout.final_result);
+            TextView resTitle = findViewById(R.id.final_result);
+            resTitle.setText("Final Result: "+currentRes);
+        }
     }
 
     protected void incrementRoundNum() {
@@ -509,11 +516,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected String buildURL(String result){
-        String req = API_HOST+SEARCH_PATH+"?term="+result+"&location=Provo&limit=5";
+        String req = API_HOST+SEARCH_PATH+"?term="+result+"&location=Provo&limit=2";
         return req;
     }
 
     protected void handleAPIResults(){
+        user1.clearRatings();
+        user2.clearRatings();
         Button nextRoundButton = findViewById(R.id.next_round_button);
         nextRoundButton.setEnabled(true);
         incrementRoundNum();
@@ -531,20 +540,8 @@ public class MainActivity extends AppCompatActivity {
 
         protected Business[] doInBackground(String... urls) {
             Business[] results = null;
-            //HttpResponse response = null;
-            try {
-                /*
-                HttpClient client = new DefaultHttpClient();
-                HttpGet request = new HttpGet();
-                //Obviously gonna update this
-                request.setHeader("Authorization", "Bearer " + API_KEY);
-                String url = buildURL(mainActivity.currentRes);
-                Log.d("round3", "url :"+url);
-                request.setURI(new URI(url));
-                response = client.execute(request);
 
-                HttpEntity responseEntity = response.getEntity();
-                String responseBody = EntityUtils.toString(responseEntity);*/
+            try {
                 String urlString = buildURL(mainActivity.currentRes);
                 URL url = new URL(urlString);
 
