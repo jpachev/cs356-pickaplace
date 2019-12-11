@@ -3,6 +3,7 @@ package com.example.pickaplace;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -20,19 +21,31 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.Console;
+import java.io.DataInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import Model.Business;
+import Model.BusinessResponse;
 import Model.CuisineRating;
 import Model.CuisineResult;
 import Model.User;
@@ -63,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     protected ArrayList<String> cuisineTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundTwoTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundThreeTypes = new java.util.ArrayList<>();
+    public Business[] restaurants;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 uName.setText(userName);
                 break;
             case 2:
-                title.setText("Rate to narrow down cuisine type");
+                title.setText("Rate each restaurant");
                 Log.d("round2", "set up round2 title");
                 uName.setText(userName);
                 break;
@@ -242,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 break;
-            case 2:
+           /* case 2:
                 setRoundTwoTypes(currentRes);
                 title.setText(roundTwoTypes.get(optionNum));
                 Log.d("round2", "title "+roundTwoTypes.get(optionNum));
@@ -258,8 +272,8 @@ public class MainActivity extends AppCompatActivity {
                         //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
-                break;
-            case 3:
+                break;*/
+            case 2:
                 //setRoundThreeTypes(currentRes);
                // title.setText(roundThreeTypes.get(optionNum));
                // Log.d("round3", "title "+roundThreeTypes.get(optionNum));
@@ -270,8 +284,7 @@ public class MainActivity extends AppCompatActivity {
                        // onRadioButtonClicked();
                         //incrementOptionNum();
                         Log.d("round3", "clicked nextButton 3");
-                        HttpResponse response = sendRequest();
-                        Log.d("round3", "Recieved response"+response.toString());
+                        new RetrieveBusinessTask().execute();
                       //  doRoundThree(user);
                        // callRadioButtonClear(radioChoiceGroup);
                         //Toast.makeText(MainActivity.this, newOptionNum.toString(),Toast.LENGTH_SHORT).show();
@@ -587,6 +600,7 @@ public class MainActivity extends AppCompatActivity {
             //Obviously gonna update this
             request.setHeader("Authorization", "Bearer " + API_KEY);
             String url = buildURL("");
+            Log.d("round3", "Url = "+url);
             request.setURI(new URI(url));
             response = client.execute(request);
             Log.d("round3", response.toString());
@@ -600,6 +614,51 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return response;
+    }
+
+
+    class RetrieveBusinessTask extends AsyncTask<String, Void, HttpResponse> {
+
+        private Exception exception;
+        protected HttpResponse doInBackground(String... urls) {
+            HttpResponse response = null;
+            try {
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                //Obviously gonna update this
+                request.setHeader("Authorization", "Bearer " + API_KEY);
+                String url = buildURL("");
+                Log.d("round3", "url :"+url);
+                request.setURI(new URI(url));
+                response = client.execute(request);
+
+                HttpEntity responseEntity = response.getEntity();
+                String responseBody = EntityUtils.toString(responseEntity);
+
+                Log.d("round3", "Response body: "+responseBody);
+                Gson gson = new Gson();
+                BusinessResponse res = gson.fromJson(responseBody, BusinessResponse.class);
+
+                int curNumB =  res.businesses.length;
+                Log.d("round3", "# of businesses "+curNumB);
+                for (int i = 0; i < res.businesses.length; i++){
+                    Business curB = res.getBusinesses()[i];
+                    Log.d("round3", curB.getName());
+                }
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            Log.d("round3", "Recieved response"+response.toString());
+            return response;
+        }
+
     }
 }
 
