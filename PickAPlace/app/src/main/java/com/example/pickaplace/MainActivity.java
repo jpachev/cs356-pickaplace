@@ -446,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             setContentView(R.layout.final_result);
             TextView resTitle = findViewById(R.id.final_result);
-            resTitle.setText("Final Result: "+currentRes);
+            resTitle.setText(currentRes);
             Button finalButton = findViewById(R.id.final_button);
             Button yelpButton = findViewById(R.id.yelp_button);
             finalButton.setOnClickListener(new View.OnClickListener() {
