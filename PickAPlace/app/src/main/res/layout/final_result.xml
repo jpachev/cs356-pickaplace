@@ -23,8 +23,8 @@
         android:textSize="40sp"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
         android:text="Result" />
 
     <TextView
@@ -37,30 +37,19 @@
         android:paddingRight="50dp"
         android:text="Enjoy your meal!" />
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:layout_marginTop="14dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:text="Click below for restaurant info\nand directions" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:gravity="center">
         <Button
             android:id="@+id/final_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button"
-            android:text="Google\nMaps"
+            android:text="Get\nDirections"
             android:layout_marginRight="15dp"
             android:textSize="14sp"
             android:textAllCaps="false"
@@ -71,7 +60,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button"
             android:layout_marginLeft="15dp"
-            android:text="Yelp"
+            android:text="View on\nYelp"
             android:textSize="14sp"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
