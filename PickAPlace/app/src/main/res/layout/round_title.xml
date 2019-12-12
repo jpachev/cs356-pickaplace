@@ -18,6 +18,8 @@
         android:layout_marginTop="30dp"
         android:layout_gravity="center"
         android:textAlignment="center"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
         android:textSize="40sp"
         android:text="Rate each type of cuisine" />
     <TextView
