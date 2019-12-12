@@ -3,6 +3,9 @@ package com.example.pickaplace;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -37,12 +40,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Model.Business;
 import Model.BusinessResponse;
@@ -76,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     protected ArrayList<String> cuisineTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundTwoTypes = new java.util.ArrayList<>();
     protected ArrayList<String> roundThreeTypes = new java.util.ArrayList<>();
+    protected HashMap<String,Business> nameToBusiness = new java.util.HashMap<>();
     public Business[] restaurants;
 
     @Override
@@ -228,6 +234,13 @@ public class MainActivity extends AppCompatActivity {
                // Log.d("checkedChange","checkedid = "+checkedId);
             }
         });
+    }
+
+
+
+
+    protected Business businessLookup(String bName){
+        return nameToBusiness.get(bName);
     }
 
     protected void doRounds(final User user, final int rNum) {
@@ -434,6 +447,41 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.final_result);
             TextView resTitle = findViewById(R.id.final_result);
             resTitle.setText("Final Result: "+currentRes);
+            Button finalButton = findViewById(R.id.final_button);
+            Button yelpButton = findViewById(R.id.yelp_button);
+            finalButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Create a Uri from an intent string. Use the result to create an Intent.
+                    Business bRes = businessLookup(currentRes);
+                    float lat = bRes.getLatitude();
+                    float lng = bRes.getLongitude();
+                    //cbll=46.414382,10.013988
+                    //Uri.parse("google.navigation:q=an+address+city"));
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lng);
+
+// Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+// Make the Intent explicit by setting the Google Maps package
+                    mapIntent.setPackage("com.google.android.apps.maps");
+
+// Attempt to start an activity that can handle the Intent
+                    startActivity(mapIntent);
+                }
+            });
+
+            yelpButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Create a Uri from an intent string. Use the result to create an Intent.
+                    Business bRes = businessLookup(currentRes);
+                    String url = bRes.getUrl();
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+
         }
     }
 
@@ -530,6 +578,16 @@ public class MainActivity extends AppCompatActivity {
         startRound(user1);
     }
 
+    public static Drawable LoadImageFromWebOperations(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     class RetrieveBusinessTask extends AsyncTask<String, Void, Business[]> {
 
@@ -569,8 +627,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("round3", "# of businesses "+curNumB);
                 for (int i = 0; i < res.businesses.length; i++){
                     Business curB = res.getBusinesses()[i];
-                    Log.d("round3", curB.getName());
+                    nameToBusiness.put(curB.getName(), curB);
+                    //Log.d("round3", curB.getImage_url());
                 }
+
 
                 results = res.getBusinesses();
 
