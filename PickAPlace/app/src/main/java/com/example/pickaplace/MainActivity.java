@@ -564,7 +564,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected String buildURL(String result){
-        String req = API_HOST+SEARCH_PATH+"?term="+result+"&location=Provo&limit=2";
+        String req = API_HOST+SEARCH_PATH+"?term="+result+"&location=Provo&limit=3";
         return req;
     }
 
