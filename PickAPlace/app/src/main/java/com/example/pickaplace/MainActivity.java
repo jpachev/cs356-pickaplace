@@ -1,18 +1,11 @@
 package com.example.pickaplace;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,24 +16,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-/*import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;*/
-import org.json.JSONObject;
-
-
 import java.io.BufferedReader;
-import java.io.IOException;
-
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -49,8 +27,16 @@ import Model.BusinessResponse;
 import Model.CuisineRating;
 import Model.CuisineResult;
 import Model.User;
+import androidx.appcompat.app.AppCompatActivity;
 
-import static java.lang.Integer.parseInt;
+/*import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;*/
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         setTempCuisineTypes();
         userName1 = findViewById(R.id.user1);
         userName2 = findViewById(R.id.user2);
-
         startButton = findViewById(R.id.start_button);
         roundNum = 1;
         optionNum = 0;
@@ -215,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 optionNum = 0;
                 resetRadio();
                 doRounds(user, roundNum);
+                //nextButton.setEnabled(false);
             }
         });
     }
@@ -225,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         radioChoiceGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                //nextButton.setEnabled(true);
                // Log.d("checkedChange","checkedid = "+checkedId);
             }
         });
@@ -249,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
                         incrementOptionNum();
                         doRoundOne(user);
                         callRadioButtonClear(radioChoiceGroup);
+                        //nextButton.setEnabled(false);
                         //Toast.makeText(MainActivity.this, "Moved to option "+optionNum,Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -263,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
                         incrementOptionNum();
                         doRoundTwo(user);
                         callRadioButtonClear(radioChoiceGroup);
+                        //nextButton.setEnabled(false);
                     }
                 });
                 break;
@@ -433,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             setContentView(R.layout.final_result);
             TextView resTitle = findViewById(R.id.final_result);
-            resTitle.setText("Final Result: "+currentRes);
+            resTitle.setText(currentRes);
         }
     }
 
@@ -476,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
         // Is the button now checked?
         String str = "";
         curOption = getCurOption();
+        //nextButton.setEnabled(true);
         resetRadio();
         int checkedId = radioChoiceGroup.getCheckedRadioButtonId();
        // Log.d("rButton", "checkedId: "+checkedId);
@@ -497,7 +487,6 @@ public class MainActivity extends AppCompatActivity {
                 str = "5";
                 break;
         }
-
         curChoice = str;
         setCurChoice(curUser,str, curOption);
     }
